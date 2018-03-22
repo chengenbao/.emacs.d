@@ -1,77 +1,20 @@
-(require 'package)
-(add-to-list
- 'package-archives
- '("melpa" . "http://melpa.milkbox.net/packages/")
- t)
+;;; init --- Bootup script for emacs
 
+;;; Commentary:
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+
+;;; Code:
 (package-initialize)
 
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
-(unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-
-(require 'use-package)
-(setq use-package-always-ensure t)
-
-(defvar my-packages
-  '(auto-complete
-    paren-face
-    color-theme
-    rainbow-delimiters
-    use-package
-    function-args
-    yasnippet
-    better-defaults
-    elpy
-    flycheck
-    py-autopep8
-    material-theme
-    zygospore
-    helm-gtags
-    helm
-    yasnippet
-    ws-butler
-    volatile-highlights
-    use-package
-    undo-tree
-    iedit
-    dtrt-indent
-    counsel-projectile
-    company
-    clean-aindent-mode
-    anzu))
-
-(mapc #'(lambda (package)
-          (unless (package-installed-p package)
-            (package-install package)))
-      my-packages)
-
-(custom-set-faces
-  '(minibuffer-prompt ((t (:foreground "brightred")))))
-
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
-(setq-default indent-tabs-mode nil)
-
 (add-to-list 'load-path "~/.emacs.d/site-lisp/cide")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/custom")
+(add-to-list 'load-path "~/.emacs.d/site-lisp")
 
-(require 'color-theme)
-(color-theme-initialize)
-(setq color-theme-is-global t)
-
-;;;(color-theme-shaman)
-;;;(color-theme-kingsajz)
-;;;(color-theme-taylor)
-
-(global-linum-mode t) ;; enable line numbers globally
-
-(require 'paren-face)
-(show-paren-mode)
-
-(require 'rainbow-delimiters)
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(require 'install-packages)
+(require 'setup-theme)
 
 (elpy-enable)
 
@@ -82,28 +25,19 @@
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
   (add-hook 'elpy-mode-hook 'flycheck-mode))
 
-(setq inhibit-startup-message t) ;; hide the startup message
-(load-theme 'material t) ;; load material theme
-
-
 (require 'setup-general)
-(if (version< emacs-version "24.4")
-    (require 'setup-ivy-counsel)
-  (require 'setup-helm)
-  (require 'setup-helm-gtags))
+(require 'setup-helm)
+;; (require 'setup-helm-gtags)
 ;; (require 'setup-ggtags)
 
 (require 'setup-cedet)
 (require 'setup-editing)
 
 ;; function-args
-;; (require 'function-args)
-;; (fa-config-default)
-;; (define-key c-mode-map  [(tab)] 'company-complete)
-;; (define-key c++-mode-map  [(tab)] 'company-complete)
-
 (require 'function-args)
 (fa-config-default)
+(define-key c-mode-map  [(tab)] 'company-complete)
+(define-key c++-mode-map  [(tab)] 'company-complete)
 
 (require 'auto-complete)
 (require 'auto-complete-config)
@@ -112,33 +46,73 @@
 (require 'yasnippet)
 (yas-global-mode 1)
 
-(custom-set-variables
- '(menu-bar-mode nil)
- '(package-selected-packages
-   (quote
-    (zygospore
-     rainbow-delimiters
-     helm-gtags
-     helm
-     yasnippet
-     ws-butler
-     volatile-highlights
-     use-package
-     undo-tree
-     iedit
-     dtrt-indent
-     counsel-projectile
-     company
-     clean-aindent-mode
-     anzu
-     use-package
-     function-args
-     yasnippet
-     better-defaults
-     elpy
-     flycheck
-     py-autopep8
-    material-theme)))
- '(speedbar-use-images nil)
- '(sr-speedbar-right-side nil))
+(define-key global-map (kbd "C-c ;") 'iedit-mode)
 
+;;; start flymake-google-cpplint-load
+(defun my:flymake-google-init ()
+  (require 'flymake-google-cpplint)
+  (custom-set-variables
+   '(flymake-google-cpplint-command "/usr/local/bin/cpplint"))
+  (flymake-google-cpplint-load))
+
+(add-hook 'c-mode-hook 'my:flymake-google-init)
+(add-hook 'c++-mode-hook 'my:flymake-google-init)
+
+;;; flycheck
+(global-flycheck-mode)
+
+(require 'google-c-style)
+(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-make-newline-indent)
+
+(require 'ox-latex)
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+(setq org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode %f"
+                              "xelatex -shell-escape -interaction nonstopmode %f"))
+
+(require 'rtags)
+(require 'company-rtags)
+
+(setq rtags-completions-enabled t)
+(eval-after-load 'company
+  '(add-to-list
+    'company-backends 'company-rtags))
+(setq rtags-autostart-diagnostics t)
+(rtags-enable-standard-keybindings)
+
+(require 'helm-rtags)
+(setq rtags-use-helm t)
+;;; (cmake-ide-setup)
+
+(setq explicit-shell-file-name "/bin/zsh")
+
+(require 'smartparens-config)
+
+(use-package smartparens
+  :ensure t
+  :diminish smartparens-mode
+  :config
+  (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+  (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+  (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
+  (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
+  (add-hook 'c++-mode-hook #'smartparens-strict-mode)
+  (add-hook 'c-mode-hook #'smartparens-strict-mode)
+  (progn
+    (require 'smartparens-config)
+    (smartparens-global-mode 1)))
+
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
+(require 'header2)
+
+;;自动清除行位空格
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook 'whitespace-cleanup)
+;;自动清除行之间的空白行
+(add-hook 'before-save-hook 'delete-blank-lines)
+;;显示空格
+(global-set-key [f1] 'whitespace-newline-mode)
+
+(provide 'init)

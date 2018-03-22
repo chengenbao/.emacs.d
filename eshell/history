@@ -1,0 +1,128 @@
+ls ../Distributions/TeXLive-2016.texdist/Contents/
+ls ../Distributions/TeXLive-2016.texdist/Contents/
+ls ../Distributions/TeXLive-2016.texdist/Contents/TexmfLocal/
+ls ../Distributions/TeXLive-2016.texdist/Contents/TexmfLocal/tex
+ls
+ls
+du -h ../Distributions/
+ls
+cd ..
+ls
+cd Distributions/
+ls
+du -h TeXLive-2015.texdist
+ls -l
+exit
+ls
+pdflatex api.tex
+git status
+cd ..
+vim .gitignore 
+ls
+clea
+git status
+clear
+clear
+git status
+git commit -am "Finish first version of api design"
+git status
+git add docs/api.org
+git commit -am "Finish first version of api design"
+git push origin query_api
+git branch -l
+vim artis/searcher/src/Executor.h
+ls
+git status
+git branch -l
+git checkout artis_1.0.5_el7_4.9.2
+ls
+cd site-lisp/
+ls
+mkdir custom
+ls
+sudo pip install jedi flake8 importmagic autopep8
+ls
+cd ..
+ls
+ln -s ../googletest gmock
+ls gmock/
+ls
+cd cmake/
+ls
+ls
+ls ../gmock/
+ls ../gmock/googlemock/
+ls ../gmock/googlemock/src/
+ls
+ls ../gmock/
+ls ../gmock/googlemock/
+ls ../gmock/googlemock/src/
+ls ../gmock/googletest/
+ls ../gmock/googletest/src/
+ls ../gmock/googlemock/
+rm -f ../gmock
+ls
+cmake ..
+cd ..
+git clone -b release-1.7.0 https://github.com/google/googlemock.git gmock
+lls
+ls
+ls gmock/
+ls gmock/src/
+ls gmock/
+ls
+ls gmock/
+ls gmock/src/
+ls
+cd cmake/
+cmake . -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+cd ../gmock
+ls
+git clone -b release-1.7.0 https://github.com/google/googletest.git gtest
+cd ../cmake/
+cmake . -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+cd ..
+ls
+cmake cmake/ -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+ls
+cd cmake/
+rc -J .
+clear
+ls
+ls
+g++ *.cc -o main
+g++ *.cc -o main
+g++ *.cc -o main
+g++ *.cc -o main
+g++ *.cc -o main
+g++ *.cc -o main
+g++ *.cc -o main
+g++ *.cc -o main
+g++ *.cc -o main
+g++ *.cc -o main
+ls
+./main 
+g++ *.cc -o main
+g++ *.cc -o main
+./main 
+g++ *.cc -o main
+g++ *.cc -o main
+g++ *.cc -o main
+./main 
+g++ *.cc -o main
+./main 
+g++ *.cc -o main
+./main 
+g++ *.cc -o main
+./main 
+g++ *.cc -o main
+./main 
+g++ *.cc -o main
+g++ *.cc -o main
+g++ *.cc -o main
+g++ *.cc -o main
+./main 
+g++ *.cc -o main
+./main 
+./main 
+./main 

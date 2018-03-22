@@ -15,10 +15,10 @@
 (setq-default indent-tabs-mode nil)
 
 ;; set appearance of a tab that is represented by 4 spaces
-(setq-default tab-width 4)
+(setq-default tab-width 2)
 
-;; Compilation
-(global-set-key (kbd "<f5>") (lambda ()
+;; Compilation use Ctr-c c to compile
+(global-set-key (kbd "C-c c") (lambda ()
                                (interactive)
                                (setq-local compilation-read-command nil)
                                (call-interactively 'compile)))
